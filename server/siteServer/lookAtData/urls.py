@@ -1,13 +1,8 @@
 from django.urls import path
-
-from . import views
+from lookAtData import views
 
 urlpatterns = [
     path("", views.index, name="index"),
-
-    path("<int:question_id>/", views.detail, name="detail"),
-
-    path("<int:question_id>/results/", views.results, name="results"),
-
-    path("<int:question_id>/vote/", views.vote, name="vote"),
+    path("post_data/", views.post_data, name="post_data"),
+    path("show_data/", views.show_data, name="show_data")
 ]

@@ -1,120 +1,62 @@
-let isExtensionActive = true; // Default state of the extension
-let currentTab = {}; // Object to hold current tab's data
+let trackingEnabled = true;
+let tabData = {};
 
-// Initialize IndexedDB for data storage
-const dbRequest = indexedDB.open("WhyGetThisDB", 1);
+chrome.runtime.onInstalled.addListener(function() {
+    chrome.storage.local.set({trackingEnabled: true});
+});
 
-dbRequest.onupgradeneeded = event => {
-    const db = event.target.result;
-    db.createObjectStore("browsingData", { keyPath: "id", autoIncrement: true });
-};
-
-dbRequest.onerror = event => {
-    console.error("Error opening IndexedDB:", event.target.errorCode);
-};
-
-// Listen for messages from content scripts or popup
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    switch (message.type) {
-        case "activityDetected":
-            handleActivity(sender.tab);
-            break;
-        case "inactivityDetected":
-            handleInactivity(sender.tab);
-            break;
-        case "toggleState":
-            isExtensionActive = message.isActive;
-            break;
-        case "requestData":
-            sendDataToServer();
-            break;
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.type === "toggleTracking") {
+        trackingEnabled = request.status;
+    } else if (request.type === "logData" && trackingEnabled) {
+        // Store data in memory for each tab
+        tabData[sender.tab.id] = request.data;
     }
 });
 
-// Handles user activity detected by content script
-function handleActivity(tab) {
-    if (!isExtensionActive) return;
+// chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+//     if (trackingEnabled && changeInfo.url && tabData[tabId]) {
+//         // URL changed, send the stored data for this tab to the backend
+//         sendDataToBackend(tabData[tabId]);
+//         delete tabData[tabId]; // Clear stored data for this tab
+//     }
+// });
 
-    if (!currentTab.id || currentTab.id !== tab.id) {
-        // New tab activity, reset the currentTab object
-        currentTab = {
-            id: tab.id,
-            url: tab.url,
-            startTime: Date.now(),
-            active: true
-        };
-    } else {
-        // Existing tab, user is still active
-        currentTab.active = true;
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+    if (changeInfo.status === 'complete' && trackingEnabled && changeInfo.url && tabData[tabId]) {
+        // URL changed, send the stored data for this tab to the backend
+        sendDataToBackend(tabData[tabId]);
+        delete tabData[tabId]; // Clear stored data for this tab
+
+        // Send a message to the content script
+        chrome.tabs.sendMessage(tabId, {type: 'TAB_UPDATED', url: tab.url}, function(response) {
+            if (chrome.runtime.lastError) {
+                console.error(chrome.runtime.lastError.message);
+            } else {
+                console.log(response);
+            }
+        });
     }
+});
+
+chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
+    if (trackingEnabled && tabData[tabId]) {
+        // Tab is closed, send the stored data for this tab to the backend
+        sendDataToBackend(tabData[tabId]);
+        delete tabData[tabId]; // Clear stored data for this tab
+    }
+});
+
+function sendDataToBackend(data) {
+    fetch('http://127.0.0.1:8000/post_data/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    // .then(response => response.json())
+    // .then(data => console.log('Data logged successfully:', data))
+    .catch((error) => console.error('Error logging data:', error));
 }
-
-// Handles user inactivity detected by content script
-function handleInactivity(tab) {
-    if (!isExtensionActive || !currentTab.id || currentTab.id !== tab.id) return;
-
-    // Mark the tab as inactive and calculate the total active time
-    currentTab.active = false;
-    let activeTime = Date.now() - currentTab.startTime; // Active time in milliseconds
-
-    // Save the activity data to IndexedDB
-    storeData({
-        dateTime: new Date().toISOString(),
-        hostUrl: new URL(currentTab.url).hostname,
-        pageUrl: currentTab.url,
-        websiteType: "Unknown", // Placeholder, you'll need to implement logic for determining website type
-        residenceTime: activeTime / 1000 // Convert to seconds
-    });
-
-    // Reset currentTab object
-    currentTab = {};
-}
-
-// Function to store data in IndexedDB
-function storeData(record) {
-    const dbOpenRequest = indexedDB.open("WhyGetThisDB");
-    dbOpenRequest.onsuccess = event => {
-        const db = event.target.result;
-        const transaction = db.transaction(["browsingData"], "readwrite");
-        const store = transaction.objectStore("browsingData");
-        store.add(record);
-    };
-    dbOpenRequest.onerror = event => {
-        console.error("Error storing data:", event.target.errorCode);
-    };
-}
-
-// Function to send data to server
-function sendDataToServer() {
-    const dbOpenRequest = indexedDB.open("WhyGetThisDB");
-    dbOpenRequest.onsuccess = event => {
-        const db = event.target.result;
-        const transaction = db.transaction(["browsingData"], "readonly");
-        const store = transaction.objectStore("browsingData");
-        const getAllRequest = store.getAll();
-
-        getAllRequest.onsuccess = () => {
-            fetch('http://localhost:3000/api/data', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(getAllRequest.result),
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-                // Consider clearing the store after successful transmission
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-        };
-    };
-    dbOpenRequest.onerror = event => {
-        console.error("Error reading data for server:", event.target.errorCode);
-    };
-}
-
-
 

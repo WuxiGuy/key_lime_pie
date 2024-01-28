@@ -1,9 +1,9 @@
-{% if latest_question_list %}
+{% if user_actions %}
     <ul>
-    {% for question in latest_question_list %}
-        <li><a href="/lookAtData/{{ question.id }}/">{{ question.question_text }}</a></li>
+    {% for action in user_actions %}
+        <li>{{ action.hostUrl }} {{ action.startTime }}</li>
     {% endfor %}
     </ul>
 {% else %}
-    <p>No polls are available.</p>
+    <p>No actions are available.</p>
 {% endif %}

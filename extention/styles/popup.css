@@ -1,22 +1,49 @@
 body {
   font-family: Arial, sans-serif;
   margin: 0;
-  padding: 10px;
-  background-color: #f4f4f4;
+  padding: 0;
+  background-color: #336699;
+  width: 250px;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #container {
-  width: 180px;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+}
+
+h1, button, .on, .off {
+  font-family: 'Dancing Script', cursive;
+}
+
+h1 {
+  color: #99CCCC;
+  margin-bottom: 20px;
+  font-size: 24px;
 }
 
 button {
   margin-bottom: 10px;
   padding: 5px 10px;
+  background-color: #FFFFFF;
+  color: #000000;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 80%;
+  font-size: 18px;
 }
 
-/* Styling for the switch */
+button:hover {
+  background-color: #F0F0F0;
+}
+
 .switch {
   position: relative;
   display: inline-block;
@@ -24,14 +51,12 @@ button {
   height: 34px;
 }
 
-/* Hide default checkbox */
 .switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
 
-/* Slider styling */
 .slider {
   position: absolute;
   cursor: pointer;
@@ -56,15 +81,34 @@ button {
   border-radius: 50%;
 }
 
-input:checked + .slider {
-  background-color: #2196F3;
+.on, .off {
+  color: white;
+  position: absolute;
+  transform: translateY(-50%);
+  top: 50%;
+  font-size: 12px;
 }
 
-input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
+.on {
+  left: 4px;
+}
+
+.off {
+  right: 4px;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
 }
 
 input:checked + .slider:before {
   transform: translateX(26px);
 }
 
+input:checked + .slider .on {
+  color: #2196F3;
+}
+
+input:not(:checked) + .slider .off {
+  color: #ccc;
+}
