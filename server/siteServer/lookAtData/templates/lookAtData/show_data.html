@@ -23,13 +23,15 @@
             <!-- <div class="chart-label">Label for Chart 2</div> -->
         </div>
         <div class="chart">
-            <div class="chart-title">Average Staying Time</div>
+            <div class="chart-title">Staying Time per Item</div>
             <canvas id="chart3"></canvas>
             <!-- <div class="chart-label">Label for Chart 3</div> -->
         </div>
     </div>
-    <div class="message">
-        {{ message }}
+    <div class="message-container">
+      <div class="message">
+          {{ message }}
+      </div>
     </div>
     <script>
         var ctx1 = document.getElementById('chart1').getContext('2d');

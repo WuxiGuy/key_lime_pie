@@ -28,7 +28,7 @@ class WebsiteCategorizer {
 
 async function main() {
   // Replace 'your_api_key_here' with your actual OpenAI API key
-  const apiKey = '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';
+  const apiKey = 'openai_api_key_here';
   const categorizer = new WebsiteCategorizer(apiKey);
 
   // Example URLs for testing
