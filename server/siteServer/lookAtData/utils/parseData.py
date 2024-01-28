@@ -1,8 +1,6 @@
 import sqlite3
 import json
 
-db_path = '../../db.sqlite3'  # Replace with your actual database file path
-output_json_path = '../../user_activity_results.json'
 
 class UserActivityAnalyzer:
     def __init__(self, db_path):
@@ -39,6 +37,7 @@ class UserActivityAnalyzer:
 
 
     def save_results_to_json(self, output_path):
+        print(self.cursor)
         results = {
             "visiting_frequencies": self.calculate_frequencies(),
             "total_active_time": self.calculate_total_times(),

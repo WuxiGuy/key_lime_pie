@@ -1,9 +1,103 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Show Data</title>
+    <title>Pies on the Table!</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'show_data.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <h1>Hello, welcome to the Show Data page!</h1>
+    <header>
+        <h1>Pies on the Table!</h1>
+    </header>
+    <div class="chart-container">
+        <div class="chart">
+            <div class="chart-title">Visiting Frequencies</div>
+            <canvas id="chart1"></canvas>
+            <!-- <div class="chart-label">Label for Chart 1</div> -->
+        </div>
+        <div class="chart">
+            <div class="chart-title">Total Active Time</div>
+            <canvas id="chart2"></canvas>
+            <!-- <div class="chart-label">Label for Chart 2</div> -->
+        </div>
+        <div class="chart">
+            <div class="chart-title">Average Staying Time</div>
+            <canvas id="chart3"></canvas>
+            <!-- <div class="chart-label">Label for Chart 3</div> -->
+        </div>
+    </div>
+    <div class="message">
+        {{ message }}
+    </div>
+    <script>
+        var ctx1 = document.getElementById('chart1').getContext('2d');
+        var ctx2 = document.getElementById('chart2').getContext('2d');
+        var ctx3 = document.getElementById('chart3').getContext('2d');
+        var data = {{ data|safe }};
+        var labels = data[0];
+        var data1 = data[1];
+        var data2 = data[2];
+        var data3 = data[3];
+        new Chart(ctx1, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data1,
+                    backgroundColor: ['#ff6384', '#36a2eb', '#cc65fe', '#ffce56', '#c45850', '#46bf77']
+                }]
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Visiting Frequencies',
+                    fontColor: '#666699',
+                    fontSize: 20
+                }
+            }
+        });
+        new Chart(ctx2, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data2,
+                    backgroundColor: ['#ff6384', '#36a2eb', '#cc65fe', '#ffce56', '#c45850', '#46bf77']
+                }]
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Total Active Time',
+                    fontColor: '#666699',
+                    fontSize: 20
+                }
+            }
+        });
+        new Chart(ctx3, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data3,
+                    backgroundColor: ['#ff6384', '#36a2eb', '#cc65fe', '#ffce56', '#c45850', '#46bf77']
+                }]
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Average Staying Time',
+                    fontColor: '#666699',
+                    fontSize: 20
+                }
+            }
+        });
+    </script>
 </body>
 </html>
+
