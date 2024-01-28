@@ -4,20 +4,23 @@
 	"version": "1.0",
 	"description": "Track and understand your browsing habits.",
 	"permissions": ["storage", "activeTab", "tabs"],
+	"host_permissions": [
+		  "http://127.0.0.1:8000/post_data/",
+			"http://127.0.0.1/",
+			"http://localhost/",
+			"https://api.openai.com/*",
+			"<all_urls>"
+	],
 	"background": {
-	  "service_worker": "scripts/background.js"
+			"service_worker": "scripts/background.js"
 	},
 	"action": {
-	  "default_popup": "pages/popup.html"
+			"default_popup": "pages/popup.html"
 	},
 	"content_scripts": [
-	  {
-		"matches": ["<all_urls>"],
-		"js": ["scripts/content.js"]
-	  }
-	],
-	"host_permissions": [
-	  "<all_urls>"
+			{
+					"matches": ["<all_urls>"],
+					"js": ["scripts/content.js", "scripts/categorize.js"]
+			}
 	]
 }
-  

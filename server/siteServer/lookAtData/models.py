@@ -1,18 +1,18 @@
 from django.db import models
 
-# Create your models here.
-class Question(models.Model):
-    question_text = models.CharField(max_length=200)
-    pub_date = models.DateTimeField("date published")
-    
-    def __str__(self):
-        return self.question_text
-
-
-class Choice(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    choice_text = models.CharField(max_length=200)
-    votes = models.IntegerField(default=0)
+class UserActions(models.Model):
+    hostUrl = models.CharField(max_length=200)
+    pageUrl = models.CharField(max_length=200)
+    startTime = models.DateTimeField("start timestamp")
+    endTime = models.DateTimeField("end timestamp")
+    activeTime = models.IntegerField(default=0)
+    webType = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.question_text
+        output = "hostUrl: " + self.hostUrl + "\n"
+        output += "pageUrl: " + self.pageUrl + "\n"
+        output += "startTime: " + str(self.startTime) + "\n"
+        output += "endTime: " + str(self.endTime) + "\n"
+        output += "activeTime: " + str(self.activeTime) + "\n"
+        output += "webType: " + self.webType + "\n"
+        return output

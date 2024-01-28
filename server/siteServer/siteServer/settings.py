@@ -25,12 +25,13 @@ SECRET_KEY = 'django-insecure-0g8jixiqx!2%fel8v$rbwn!@=*36*!!3ltd6^xqoq&3(x%day(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", "chrome-extension://ddhnioagojgaojljmlpacncpfmjkcccj"]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders', # added for CORS
     'lookAtData.apps.LookatdataConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware', # added for CORS
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -110,7 +112,7 @@ TIME_ZONE = 'US/Eastern'
 
 USE_I18N = False
 
-USE_TZ = False
+USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
@@ -122,3 +124,10 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CORS_ALLOWED_ORIGINS = [
+    "chrome-extension://ddhnioagojgaojljmlpacncpfmjkcccj",
+    "http://127.0.0.1"
+]
+
+CORS_ALLOW_ALL_ORIGINS = True
