@@ -1,24 +1,26 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const toggleSwitch = document.getElementById('toggleSwitch');
-    const myDataButton = document.getElementById('myData');
+  var toggleSwitch = document.getElementById('toggleSwitch');
+  var myDataButton = document.getElementById('myData');
 
-    // Check the current state of the extension and update the switch accordingly
-    chrome.storage.local.get(['isExtensionActive'], function(result) {
-        toggleSwitch.checked = result.isExtensionActive !== false; // Default to true if undefined
-    });
+  // Initialize the state of the toggle switch
+  chrome.storage.local.get('trackingEnabled', function(data) {
+      toggleSwitch.checked = data.trackingEnabled !== false;
+  });
 
-    // Listener for the data button
-    myDataButton.addEventListener('click', function() {
-        // Send a message to background.js to handle data request
-        chrome.runtime.sendMessage({ type: "requestData" });
-    });
+  // Listen for changes in the toggle switch
+  toggleSwitch.addEventListener('change', function() {
+      chrome.storage.local.set({trackingEnabled: this.checked});
+      chrome.runtime.sendMessage({type: "toggleTracking", status: this.checked});
+  });
 
-    // Listener for the toggle switch
-    toggleSwitch.addEventListener('change', function() {
-        const isExtensionActive = toggleSwitch.checked;
-        // Update the extension state in storage
-        chrome.storage.local.set({ isExtensionActive });
-        // Send a message to background.js to update the extension state
-        chrome.runtime.sendMessage({ type: "toggleState", isActive: isExtensionActive });
-    });
+  // Handle "My Data" button click
+  myDataButton.addEventListener('click', function() {
+      fetch('http://127.0.0.1:8000/show_data', { method: 'GET' })
+          .then(response => response.json())
+          .then(data => {
+              console.log(data);
+              // Process and display the data
+          })
+          .catch(error => console.error('Error:', error));
+  });
 });

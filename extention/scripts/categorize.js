@@ -1,5 +1,3 @@
-import OpenAI from 'openai';
-
 class WebsiteCategorizer {
   constructor(apiKey) {
     this.openai = new OpenAI({ apiKey: apiKey });
