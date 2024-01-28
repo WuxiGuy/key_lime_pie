@@ -22,5 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
               // Process and display the data
           })
           .catch(error => console.error('Error:', error));
+
+          window.open('http://127.0.0.1:8000/show_data', '_blank');
   });
 });

@@ -1,0 +1,14 @@
+{
+    "visiting_frequencies": {
+        "shopping": 1,
+        "test": 16
+    },
+    "total_active_time": {
+        "shopping": 3,
+        "test": 48
+    },
+    "average_staying_time": {
+        "shopping": 3.0,
+        "test": 3.0
+    }
+}

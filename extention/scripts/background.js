@@ -55,8 +55,8 @@ function sendDataToBackend(data) {
         },
         body: JSON.stringify(data),
     })
-    .then(response => response.json())
-    .then(data => console.log('Data logged successfully:', data))
+    // .then(response => response.json())
+    // .then(data => console.log('Data logged successfully:', data))
     .catch((error) => console.error('Error logging data:', error));
 }
 
