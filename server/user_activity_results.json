@@ -1,14 +1,29 @@
 {
     "visiting_frequencies": {
-        "shopping": 1,
-        "test": 16
+        "adults": 3,
+        "gambling": 2,
+        "news": 2,
+        "shopping": 4,
+        "social": 2,
+        "sports": 4,
+        "test": 2
     },
     "total_active_time": {
-        "shopping": 3,
-        "test": 48
+        "adults": 4,
+        "gambling": 1,
+        "news": 4,
+        "shopping": 13,
+        "social": 3,
+        "sports": 26,
+        "test": 32
     },
     "average_staying_time": {
-        "shopping": 3.0,
-        "test": 3.0
+        "adults": 1.3333333333333333,
+        "gambling": 0.5,
+        "news": 2.0,
+        "shopping": 3.25,
+        "social": 1.5,
+        "sports": 6.5,
+        "test": 16.0
     }
 }
